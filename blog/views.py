@@ -14,6 +14,11 @@ class PostDetail(DetailView):
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
+class PostDelete(DeleteView):
+    model = Post
+    success_url = '/'
+    template_name = 'blog/post_delete.html'
+    
 class PostNew(CreateView):
     form_class = PostForm
     template_name = 'blog/post_new.html'
@@ -26,11 +31,6 @@ class PostNew(CreateView):
         post.published_date = timezone.now()
         post.save()
         return redirect('post_detail', pk=post.pk)
-        
-class PostDelete(DeleteView):
-    model = Post
-    success_url = '/'
-    template_name = 'blog/post_delete.html'
 
 class PostEdit(UpdateView):
     model = Post
