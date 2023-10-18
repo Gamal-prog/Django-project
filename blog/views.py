@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .models import Post
 from .forms import PostForm
 
@@ -31,3 +31,15 @@ class PostDelete(DeleteView):
     model = Post
     success_url = '/'
     template_name = 'blog/post_delete.html'
+
+class PostEdit(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_edit.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.author = self.request.user
+        post.published_date = timezone.now()
+        post.save()
+        return redirect('post_detail', pk=post.pk)
